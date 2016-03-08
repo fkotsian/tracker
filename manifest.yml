@@ -1,0 +1,6 @@
+---
+applications:
+  - name: tracker
+    memory: 512M
+    host: tracker
+    buildpack: ruby_buildpack
