@@ -11,7 +11,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160308051540) do
+ActiveRecord::Schema.define(version: 20160326071454) do
+
+  create_table "twilio_messages", force: :cascade do |t|
+    t.string   "to_country"
+    t.string   "to_state"
+    t.string   "sms_message_sid"
+    t.integer  "num_media"
+    t.string   "to_city"
+    t.integer  "from_zip"
+    t.string   "sms_sid"
+    t.string   "from_state"
+    t.string   "sms_status"
+    t.string   "from_city"
+    t.string   "body"
+    t.string   "from_country"
+    t.string   "to"
+    t.string   "messaging_service_sid"
+    t.integer  "to_zip"
+    t.integer  "num_segments"
+    t.string   "message_sid"
+    t.string   "account_sid"
+    t.string   "from"
+    t.string   "api_version"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.string   "message_category"
+  end
 
   create_table "users", force: :cascade do |t|
     t.string   "name"

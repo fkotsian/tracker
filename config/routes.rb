@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-  root to: 'messages#send_message'
-  get '/send', to: 'messages#send_message'
+  # root to: 'messages#send_message'
+  post '/in', to: 'messages#respond'
 end

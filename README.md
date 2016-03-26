@@ -4,7 +4,21 @@ Track your business through SMS.
 
 ## Stories
 
-Phone number
+#Phone number
+#Can send custom message
+#Can define an autoresponse to a message
+
+#Can receive text of a message
+
+Can send a message with a codeword to a message and get a defined response back
+Can respond to a defined respose with a second response
+Can record the data from that second response
+
+Response codes (triggers) are not saved with message in DB.
+
+Tasks to summarize the: workouts, calorie logs (daily), diary logs (weekly - "this week you did:...")
+Action to interact with certain categories: 'Ask #{category}' -- report latest task for that category
+
 Can define a custom checkin message
 Can receive that message when we text the number
  - expose a custom URL and text back to it

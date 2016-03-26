@@ -1,34 +1,58 @@
-require 'twilio-ruby'
+require 'nokogiri'
 
 class MessagesController < ApplicationController
-  def send_message
+  SUPPORTED_ACTIONS = {
+    "'Log'"       => 'to record what you did today',
+    "'Food'"      => 'to record what you ate today',
+    "'Workout'"   => 'to record your workout today'
+  }
+  
+  def respond
+    m = TwilioMessage.from_params(filtered_params)
 
-    Rails.logger.info "ENV: #{ENV}"
+    body = filtered_params['Body']
+    trigger = body.split(/\s/).first
+    
+    case trigger
+    when /^(diary|log|journal)/i
+      m.message_category = 'diary'
+      m.save!
+    when /^food/i
+      m.message_category = 'food'
+      m.save!
+    when /^workout/i
+      m.message_category = 'workout'
+      m.save!
+    else
+      twiml = Nokogiri::XML::Builder.new(encoding:'UTF-8') do |xml|
+        xml.Response {
+          xml.Message <<-RESP
+            I'm sorry, I didn't understand that.
+Try #{SUPPORTED_ACTIONS.map{|a,d| "#{a} #{d}."}.join(" ") }
+          RESP
+        }
+      end
+    end
+    
+    twiml ||= Nokogiri::XML::Builder.new(encoding:'UTF-8') do |xml|
+      xml.Response {
+        xml.Message <<-RESP
+          RECEIVED YOUR MESSAGE: #{trigger}. Thank you!
+        RESP
+      }
+    end
 
-    
-    @twilio_number = ENV['twilio_number']
-    @client = new_client
-
-    Rails.logger.info "Client: #{@client}"
-    recipient = ENV['recipient_number']
-    
-    Rails.logger.info "Receiver: #{recipient}"
-    
-    message = @client.account.messages.create(
-      from: @twilio_number,
-      to: recipient,
-      body: 'Hello from Twilio!'
-    )
-    
-    Rails.logger.info "RECIPIENT: #{@twilio_number}"
-    Rails.logger.info "SENT A MESSAGE TO: #{message.to}"
-    
-    render status: 200, json: {}
+    render status: 200, xml: twiml
   end
+  
+  def completion_callback
+  end
+  
   
   private
-  
-  def new_client
-    Twilio::REST::Client.new(ENV['twilio_account_sid'], ENV['twilio_auth_token'])
+    
+  def filtered_params
+    params.permit(TwilioMessage::KNOWN_KEYS)
   end
+  
 end
