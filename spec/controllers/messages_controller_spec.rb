@@ -12,28 +12,45 @@ describe MessagesController do
         )
       end
 
-      context 'configuring time settings' do
-        xit 'asks for message time configuration' do
-          expect_any_instance_of(Twilio::TwiML::Response).to receive(:Message).with(
+      it 'subscribes the user to the service' do
+        expect(MoodSubscription).to receive(:new)
+        expect_any_instance_of(MoodSubscription).to receive(:save!)
+
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+
+      end
+
+      it 'sets up a default time setting' do
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+
+        expect(SubscriptionConfiguration).to receive(:new).with(time_to_send: '12:00')  # ideally in UST
+        expect_any_instance_of(SubscriptionConfiguration).to receive(:save!)
+      end
+
+      context 'asking for time settings' do
+        xit 'asks for the desired times to receive messages' do
+          post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+
+          expect(response.body).to include(  
             'We will text you about your mood up to three times per day. Send back up to three times you\'d like us to check in with you at. (Eg: 4am, 12:15pm, 6:30pm).'
           )
         end
 
         xit 'sets a "time-settings" cookie in the response' do
         end
-
-        context 'when a response is received re: time-settings' do
-          it 'expires the cookie, showing that the response has been received'
-        end
       end
-
-      xit 'informs the user how to stop and how to check their data on the web' 
     end
 
     context 'and the user is not new' do
       xit 'loads the user from the database via the phone number' do
       end
 
+      context 'when configuring time settings' do
+        it 'saves the time settings'
+        it 'expires the cookie, showing that the response has been received'
+      end
+
+      xit 'informs the user how to stop and how to check their data on the web' 
       context 'when the message is a keyword' do
         context 'STOP'
         context 'LINK - link to the web'
