@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160713064826) do
+ActiveRecord::Schema.define(version: 20160713082205) do
 
   create_table "phones", force: :cascade do |t|
     t.string   "number"
@@ -21,6 +21,30 @@ ActiveRecord::Schema.define(version: 20160713064826) do
   end
 
   add_index "phones", ["user_id"], name: "index_phones_on_user_id"
+
+  create_table "subscription_configurations", force: :cascade do |t|
+    t.integer  "subscription_id"
+    t.time     "time_to_send"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "subscription_configurations", ["subscription_id"], name: "index_subscription_configurations_on_subscription_id"
+
+  create_table "subscription_types", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "subscriptions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string   "type"
+  end
+
+  add_index "subscriptions", ["user_id"], name: "index_subscriptions_on_user_id"
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
