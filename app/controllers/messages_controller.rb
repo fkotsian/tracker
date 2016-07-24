@@ -6,11 +6,13 @@ require './app/models/subscriptions/mood_subscription'
 
 class MessagesController < ApplicationController
   def respond
+    session["pending_messages"] ||= []
+
     message_sid = message_params['MessageSid']
     user_number = message_params['From']
     body = message_params['Body']
 
-    user = fetch_user_by_phone(user_number)
+    user = User.fetch_by_phone_number(user_number)
 
     if !user
       user = User.new
@@ -33,23 +35,26 @@ class MessagesController < ApplicationController
         r.Message using_this_app_message
       end 
 
-      session["pending_messages"] ||= []
       session["pending_messages"] << "time_settings"
-
-      twiml
     else
-      # load the user
-      # check for previous message
+      # if keyword, check for keyword
+      # else, check for previous message
+      if session["pending_messages"].any?
+        case session["pending_messages"]
+        when "time_settings"
+          session["pending_messages"].delete(index_of("time_settings"))
+
+        end
+      end
+
+      twiml = Twilio::TwiML::Response.new do |r|
+      end
     end
     
     render formats: :xml, body: twiml.text
   end
 
   private
-
-  def fetch_user_by_phone(number)
-    User.joins(:phones).where(['number = ?', number]).first
-  end
 
   def welcome_message
     'Welcome to Trigger Mood! We help you be your best self by asking you about your mood once per day. Excited to have you!'
@@ -68,7 +73,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.permit(
+    params.require('body').permit(
       [
         'MessageSid', 'SmsSid', 'AccountSid', 'MessagingServiceSid', 
         'From', 'To', 'Body', 

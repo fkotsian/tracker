@@ -64,12 +64,15 @@ describe MessagesController do
     end
 
     context 'and the user is not new' do
-      let!(:user) { User.create! }
+      let(:user) { User.create! }
       let!(:phone) { Phone.create!(number: '1234', user: user) }
 
-      xit 'loads the user from the database via the phone number' do
+      it 'loads the user from the database via the phone number' do
+        expect(User).to receive(:fetch_by_phone_number).with('1234').and_return(user)
+
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
       end
-      
+
       context 'when messages are waiting for response' do
         context 'when configuring time settings' do
           before do
