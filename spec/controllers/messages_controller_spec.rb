@@ -53,27 +53,28 @@ describe MessagesController do
     end
 
     context 'and the user is not new' do
+      let!(:user) { User.create! }
+      let!(:phone) { Phone.create!(number: '1234', user: user) }
+
       xit 'loads the user from the database via the phone number' do
       end
+      
+      context 'when messages are waiting for response' do
+        context 'when configuring time settings' do
+          before do
+            session["pending_messages"] << "time_settings"
+          end
 
-      context 'when configuring time settings' do
-        it 'saves the time settings'
-        it 'expires the cookie, showing that the response has been received'
+          it 'saves the time settings'
+          it 'expires the cookie, showing that the response has been received'
+          it 'saves the message, user, time, and location in the database'
+        end
       end
-
 
       context 'when the message is a keyword' do
         context 'STOP'
         context 'LINK - link to the web'
         context 'other stuff'
-      end
-
-      context 'when the message is a response to a previous message' do
-        context 'and a message cookie exists' do
-          xit 'saves the message, user, time, and location in the database' do
-            fail
-          end
-        end
       end
     end
   end
