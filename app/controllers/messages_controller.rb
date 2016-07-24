@@ -32,6 +32,7 @@ class MessagesController < ApplicationController
       twiml = Twilio::TwiML::Response.new do |r|
         r.Message welcome_message
         r.Message time_config_message
+        r.Message using_this_app_message
       end 
     else
       # load the user
@@ -49,6 +50,10 @@ class MessagesController < ApplicationController
 
   def time_config_message
     'We will text you about your mood up to three times per day. Send back up to three times you\'d like us to check in with you at. (Eg: 4am, 12:15pm, 6:30pm).'
+  end
+
+  def using_this_app_message
+    'Respond STOP at any time to stop. You can check your mood data and some sweet graphs on your phone or the web at https://triggerapp.com/<your-phone-number>.'
   end
 
   def default_subscription_configuration(subscription)

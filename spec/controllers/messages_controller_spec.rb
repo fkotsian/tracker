@@ -4,14 +4,6 @@ require './app/controllers/messages_controller'
 describe MessagesController do
   context 'when an incoming message comes in', type: :controller do
     context 'and the user is new' do
-      it 'responds with a welcome message' do
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
-        
-        expect(response.body).to include(  
-          'Welcome to Trigger Mood! We help you be your best self by asking you about your mood once per day. Excited to have you!'
-        )
-      end
-
       it 'subscribes the user to the service' do
         expect(MoodSubscription).to receive(:new).and_call_original
         expect_any_instance_of(MoodSubscription).to receive(:save!)
@@ -25,6 +17,22 @@ describe MessagesController do
           .and_call_original
 
         post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+      end
+      
+      it 'responds with a welcome message' do
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        
+        expect(response.body).to include(  
+          'Welcome to Trigger Mood! We help you be your best self by asking you about your mood once per day. Excited to have you!'
+        )
+      end
+
+      it 'informs the user how to stop and how to check their data on the web' do
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        
+        expect(response.body).to include(  
+          'Respond STOP at any time to stop. You can check your mood data and some sweet graphs on your phone or the web at https://triggerapp.com/&lt;your-phone-number&gt;.'
+        )
       end
 
       context 'asking for time settings' do
@@ -50,7 +58,6 @@ describe MessagesController do
         it 'expires the cookie, showing that the response has been received'
       end
 
-      xit 'informs the user how to stop and how to check their data on the web' 
 
       context 'when the message is a keyword' do
         context 'STOP'
