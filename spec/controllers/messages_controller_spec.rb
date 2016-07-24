@@ -36,7 +36,7 @@ describe MessagesController do
       end
 
       context 'asking for time settings' do
-        xit 'asks for the desired times to receive messages' do
+        it 'asks for the desired times to receive messages' do
           post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
 
           expect(response.body).to include(  
@@ -44,7 +44,10 @@ describe MessagesController do
           )
         end
 
-        xit 'sets a "time-settings" cookie in the response' do
+        it 'sets a cookie tracking the time settings in the response' do
+          post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+
+          expect(session["pending_messages"]).to include("time_settings")
         end
       end
     end

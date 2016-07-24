@@ -27,13 +27,16 @@ class MessagesController < ApplicationController
       user.subscriptions << user_subscription
       user.save!
 
-
-
       twiml = Twilio::TwiML::Response.new do |r|
         r.Message welcome_message
         r.Message time_config_message
         r.Message using_this_app_message
       end 
+
+      session["pending_messages"] ||= []
+      session["pending_messages"] << "time_settings"
+
+      twiml
     else
       # load the user
       # check for previous message
