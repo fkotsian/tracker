@@ -1,3 +1,4 @@
 log
 db/test*
 db/development*
+tags
