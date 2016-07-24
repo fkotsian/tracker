@@ -10,7 +10,7 @@ class MessagesController < ApplicationController
     user_number = message_params['From']
     body = message_params['Body']
 
-    user = User.joins(:phones).where(['number = ?', user_number]).first
+    user = fetch_user_by_phone(user_number)
 
     if !user
       user = User.new
@@ -46,6 +46,10 @@ class MessagesController < ApplicationController
   end
 
   private
+
+  def fetch_user_by_phone(number)
+    User.joins(:phones).where(['number = ?', number]).first
+  end
 
   def welcome_message
     'Welcome to Trigger Mood! We help you be your best self by asking you about your mood once per day. Excited to have you!'
