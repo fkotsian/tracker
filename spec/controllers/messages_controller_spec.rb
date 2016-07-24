@@ -83,6 +83,16 @@ describe MessagesController do
           it 'expires the cookie, showing that the response has been received'
           it 'saves the message, user, time, and location in the database'
         end
+
+        context 'when waiting for a mood response' do
+          before do
+            session["pending_messages"] << "mood"
+          end
+
+          it 'saves the mood'
+          it 'expires the cookie, showing that the response has been received'
+          it 'saves the message, user, time, and location in the database'
+        end
       end
 
       context 'when the message is a keyword' do
