@@ -97,7 +97,8 @@ describe MessagesController do
 
       context 'when the message is a keyword' do
         context 'STOP'
-        context 'LINK - link to the web'
+        context 'LINK - link to the web' # also be called DATA
+        context 'HELP'                   # also be called CONFIG or MENU
         context 'other stuff'
       end
     end
