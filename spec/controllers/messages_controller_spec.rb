@@ -1,7 +1,18 @@
 require 'spec_helper'
 require './app/controllers/messages_controller'
+require 'database_cleaner'
 
 describe MessagesController do
+  DatabaseCleaner.strategy = :transaction
+
+  before(:each) do
+    DatabaseCleaner.start
+  end
+
+  after(:each) do
+    DatabaseCleaner.clean
+  end
+
   context 'when an incoming message comes in', type: :controller do
     context 'and the user is new' do
       it 'subscribes the user to the service' do
