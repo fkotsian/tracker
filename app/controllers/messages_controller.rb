@@ -1,6 +1,7 @@
 require 'twilio-ruby'
 require './app/models/phone'
 require './app/models/user'
+require './app/models/subscription_configuration'
 require './app/models/subscriptions/mood_subscription'
 
 class MessagesController < ApplicationController
@@ -15,11 +16,14 @@ class MessagesController < ApplicationController
       user = User.new
       user_phone = Phone.new(number: user_number)
       user_subscription = MoodSubscription.new
+      user_subscription_configuration = default_subscription_configuration(user_subscription)
 
-      p user_subscription.subscription_configurations
+      user_subscription_configuration.save!
+      user_subscription.save!
 
-      user_subscription.subscription_configurations << default_subscription_configuration
+      user_phone.save!
       user.phones << user_phone
+
       user.subscriptions << user_subscription
       user.save!
 
@@ -47,8 +51,8 @@ class MessagesController < ApplicationController
     'We will text you about your mood up to three times per day. Send back up to three times you\'d like us to check in with you at. (Eg: 4am, 12:15pm, 6:30pm).'
   end
 
-  def default_subscription_configuration
-    SubscriptionConfiguration.new(time_to_send: '12:00')
+  def default_subscription_configuration(subscription)
+    SubscriptionConfiguration.create!(time_to_send: '12:00', subscription: subscription)
   end
 
   def message_params

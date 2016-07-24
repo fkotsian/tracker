@@ -1,3 +1,3 @@
-require './app/models/subscription'
+require './app/models/subscriptions/subscription'
 
 class MoodSubscription < Subscription; end

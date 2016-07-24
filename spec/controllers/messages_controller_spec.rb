@@ -13,18 +13,18 @@ describe MessagesController do
       end
 
       it 'subscribes the user to the service' do
-        expect(MoodSubscription).to receive(:new)
+        expect(MoodSubscription).to receive(:new).and_call_original
         expect_any_instance_of(MoodSubscription).to receive(:save!)
 
         post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
-
       end
 
       it 'sets up a default time setting' do
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        expect(SubscriptionConfiguration).to receive(:create!).with(time_to_send: '12:00', 
+                                                                    subscription: anything)  # ideally in UTC
+          .and_call_original
 
-        expect(SubscriptionConfiguration).to receive(:new).with(time_to_send: '12:00')  # ideally in UST
-        expect_any_instance_of(SubscriptionConfiguration).to receive(:save!)
+        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
       end
 
       context 'asking for time settings' do
@@ -51,6 +51,7 @@ describe MessagesController do
       end
 
       xit 'informs the user how to stop and how to check their data on the web' 
+
       context 'when the message is a keyword' do
         context 'STOP'
         context 'LINK - link to the web'
