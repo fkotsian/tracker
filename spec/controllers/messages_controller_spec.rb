@@ -19,7 +19,7 @@ describe MessagesController do
         expect(MoodSubscription).to receive(:new).and_call_original
         expect_any_instance_of(MoodSubscription).to receive(:save!)
 
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        post_message
       end
 
       it 'sets up a default time setting' do
@@ -27,11 +27,11 @@ describe MessagesController do
                                                                     subscription: anything)  # ideally in UTC
           .and_call_original
 
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        post_message
       end
       
       it 'responds with a welcome message' do
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        post_message
         
         expect(response.body).to include(  
           'Welcome to Trigger Mood! We help you be your best self by asking you about your mood once per day. Excited to have you!'
@@ -39,7 +39,7 @@ describe MessagesController do
       end
 
       it 'informs the user how to stop and how to check their data on the web' do
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        post_message
         
         expect(response.body).to include(  
           'Respond STOP at any time to stop. You can check your mood data and some sweet graphs on your phone or the web at https://triggerapp.com/&lt;your-phone-number&gt;.'
@@ -48,7 +48,7 @@ describe MessagesController do
 
       context 'asking for time settings' do
         it 'asks for the desired times to receive messages' do
-          post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+          post_message
 
           expect(response.body).to include(  
             'We will text you about your mood up to three times per day. Send back up to three times you\'d like us to check in with you at. (Eg: 4am, 12:15pm, 6:30pm).'
@@ -56,7 +56,7 @@ describe MessagesController do
         end
 
         it 'sets a cookie tracking the time settings in the response' do
-          post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+          post_message
 
           expect(session["pending_messages"]).to include("time_settings")
         end
@@ -70,7 +70,7 @@ describe MessagesController do
       it 'loads the user from the database via the phone number' do
         expect(User).to receive(:fetch_by_phone_number).with('1234').and_return(user)
 
-        post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': 'Sign me up!' }
+        post_message('some-message')
       end
 
       context 'when messages are waiting for response' do
@@ -102,5 +102,9 @@ describe MessagesController do
         context 'other stuff'
       end
     end
+  end
+
+  def post_message(body='Sign me up!')
+    post :respond, body: { 'From': '1234', 'MessageSid': 'abcd', 'body': body }
   end
 end
