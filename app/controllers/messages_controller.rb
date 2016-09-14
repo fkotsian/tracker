@@ -45,9 +45,15 @@ class MessagesController < ApplicationController
           session["pending_messages"].delete(index_of("time_settings"))
 
         end
+        when -> (pending) { pending.include? "mood" }
+          mood = body.match(/[1-5]/)[0]
+          MoodResponse.create!(user_id: user.id, body: mood)
+        end
+
       end
 
       twiml = Twilio::TwiML::Response.new do |r|
+        r.message "Thanks! Saved your response. View your data at trigger-app.heroku.com."
       end
     end
     
