@@ -23,9 +23,11 @@ ActiveRecord::Schema.define(version: 20160914040113) do
   add_index "phones", ["user_id"], name: "index_phones_on_user_id"
 
   create_table "responses", force: :cascade do |t|
-    t.integer "user_id"
-    t.string  "body"
-    t.string  "type"
+    t.integer  "user_id"
+    t.string   "body"
+    t.string   "type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   add_index "responses", ["user_id", "type"], name: "index_responses_on_user_id_and_type"
