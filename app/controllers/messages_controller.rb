@@ -29,28 +29,29 @@ class MessagesController < ApplicationController
       user.subscriptions << user_subscription
       user.save!
 
-      twiml = Twilio::TwiML::Response.new do |r|
-        r.Message welcome_message
-        r.Message time_config_message
-        r.Message using_this_app_message
-      end 
+      # twiml = Twilio::TwiML::Response.new do |r|
+        # r.Message welcome_message
+        # r.Message time_config_message
+        # r.Message using_this_app_message
+      # end 
+    end
 
-      session["pending_messages"] << "time_settings"
-    else
+      # session["pending_messages"] << "time_settings"
+    # else
       # if keyword, check for keyword
       # else, check for previous message
-      if session["pending_messages"].any?
-        case session["pending_messages"]
-        when "time_settings"
-          session["pending_messages"].delete(index_of("time_settings"))
+      # if session["pending_messages"].any?
+      #   case session["pending_messages"]
+      #   when "time_settings"
+      #     session["pending_messages"].delete(index_of("time_settings"))
 
-        end
-        when -> (pending) { pending.include? "mood" }
+      #   end
+      #   when -> (pending) { pending.include? "mood" }
           mood = body.match(/[1-5]/)[0]
           MoodResponse.create!(user_id: user.id, body: mood)
-        end
+      #   end
 
-      end
+      # end
 
       twiml = Twilio::TwiML::Response.new do |r|
         r.message "Thanks! Saved your response. View your data at trigger-app.heroku.com."
