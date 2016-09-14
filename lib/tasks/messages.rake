@@ -1,3 +1,6 @@
+require 'twilio-ruby'
+require './app/helpers/twilio_helper'
+
 namespace :messages do
   desc 'Send a message checking in on mood'
   task :send_mood do
