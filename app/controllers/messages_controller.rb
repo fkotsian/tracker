@@ -47,9 +47,17 @@ class MessagesController < ApplicationController
 
       #   end
       #   when -> (pending) { pending.include? "mood" }
-          mood = body.match(/[1-5]/)[0]
-          mood_resp = MoodResponse.create!(user_id: user.id, body: mood)
-          Rails.logger.info("Mood Created! Level: #{mood_resp.body}")
+      case body
+      when -> (txt) { txt.match(/[1-5]/) }
+        mood = body.match(/[1-5]/)[0]
+        mood_resp = MoodResponse.create!(user_id: user.id, body: mood)
+        Rails.logger.info("Mood Event Created! Level: #{mood_resp.body}")
+      when -> (txt) { txt[0].match(/[YN]/) }
+        gym = body.match(/[YN]/)[0]
+        # went = ( gym == "Y" ) ? true : false
+        gym_resp = GymResponse.create!(user_id: user.id, body: gym)
+        Rails.logger.info("Gym Event Created! Went: #{gym_resp.body}")
+      end
       #   end
 
       # end

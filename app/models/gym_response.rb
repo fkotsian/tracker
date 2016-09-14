@@ -1,0 +1,3 @@
+class GymResponse < Response
+
+end
