@@ -79,7 +79,11 @@ describe MessagesController do
             session["pending_messages"] << "time_settings"
           end
 
-          it 'saves the time settings'
+          it 'saves the time settings to the users subscription' do
+            expect(SubscriptionConfiguration)
+            
+            post_message('8 12:00 1pm')
+          end
           it 'expires the cookie, showing that the response has been received'
           it 'saves the message, user, time, and location in the database'
         end

@@ -41,7 +41,11 @@ class MessagesController < ApplicationController
       # else, check for previous message
       if session["pending_messages"].any?
         case session["pending_messages"]
-        when "time_settings"
+        when -> (pending) { pending.include? "time_settings" }
+          desired_times = body
+          desired_times = body.match(//) # match the time strings and split on ',', ' '.
+                                         # 
+
           session["pending_messages"].delete(index_of("time_settings"))
 
         end
