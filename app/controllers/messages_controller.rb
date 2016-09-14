@@ -48,7 +48,8 @@ class MessagesController < ApplicationController
       #   end
       #   when -> (pending) { pending.include? "mood" }
           mood = body.match(/[1-5]/)[0]
-          MoodResponse.create!(user_id: user.id, body: mood)
+          mood_resp = MoodResponse.create!(user_id: user.id, body: mood)
+          Rails.logger.info("Mood Created! Level: #{mood_resp.body}")
       #   end
 
       # end
