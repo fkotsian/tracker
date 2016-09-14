@@ -1,0 +1,3 @@
+class MoodResponse < Response
+
+end
