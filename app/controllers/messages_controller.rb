@@ -93,7 +93,7 @@ class MessagesController < ApplicationController
   end
 
   def message_params
-    params.require('body').permit(
+    params.permit(
       [
         'MessageSid', 'SmsSid', 'AccountSid', 'MessagingServiceSid', 
         'From', 'To', 'Body', 
