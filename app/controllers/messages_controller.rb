@@ -59,6 +59,8 @@ class MessagesController < ApplicationController
         # went = ( gym == "Y" ) ? true : false
         gym_resp = GymResponse.create!(user_id: user.id, body: gym)
         Rails.logger.info("Gym Event Created! Went: #{gym_resp.body}")
+      else
+        Rails.logger.info("UNABLE to match message: #{body}")
       end
       #   end
 
