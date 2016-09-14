@@ -1,4 +1,4 @@
-class TwilioHelper
+module TwilioHelper
   def self.client
     @client ||= Twilio::REST::Client.new(
       ENV["twilio_account_sid"], 
