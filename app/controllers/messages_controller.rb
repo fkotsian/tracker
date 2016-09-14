@@ -5,6 +5,8 @@ require './app/models/subscription_configuration'
 require './app/models/subscriptions/mood_subscription'
 
 class MessagesController < ApplicationController
+  skip_before_action :verify_authenticity_token, only: [:respond]
+
   def respond
     session["pending_messages"] ||= []
 
