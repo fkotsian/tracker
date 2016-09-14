@@ -10,6 +10,6 @@ namespace :messages do
       body: 'How is your mood right now, from 1 to 5?'
     })
 
-    session["pending_messages"] << "mood"
+    # session["pending_messages"] << "mood"
   end
 end
