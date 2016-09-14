@@ -57,7 +57,7 @@ class MessagesController < ApplicationController
       twiml = Twilio::TwiML::Response.new do |r|
         r.message "Thanks! Saved your response. View your data at trigger-app.heroku.com."
       end
-    end
+    #end
     
     render formats: :xml, body: twiml.text
   end
