@@ -14,5 +14,7 @@ module Trigger
     config.generators.javascripts = false
     config.generators.assets = false
     config.generators.helper = false
+
+    config.logger = Logger.new(STDOUT)
   end
 end
