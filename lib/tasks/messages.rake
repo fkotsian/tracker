@@ -15,4 +15,27 @@ namespace :messages do
 
     # session["pending_messages"] << "mood"
   end
+
+  desc 'Send a message summarizing gym activity for the week'
+  task :send_gym_summary do
+    return unless Date.today.wday == 6  # only run on Saturday; hack to get around Heroku Scheduler
+
+    gym_accounts = GymResponse.where('created_at > ?', 1.week.ago).count
+
+    case gym_accounts
+    when -> (accounts) { accounts >= 3 }
+      msg = "Congrats! You visited the gym #{gym_accounts} times this week! Think about how many weeks it's going to take to get that 6-pack. :swole:!"
+    else
+      msg = "Aw cman! You visited the gym #{gym_accounts} times this week. You can do better than that! What are you going to do differently next week?"
+    end
+
+    to_number = '+13104835624'
+    TwilioHelper.client.messages.create({
+      from: '+16508894472',
+      to: to_number,
+      body: msg
+    })
+
+    Rails.logger.info("RAKE: Sent gym summary message to #{to_number}")
+  end
 end

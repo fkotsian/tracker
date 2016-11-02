@@ -49,16 +49,18 @@ class MessagesController < ApplicationController
 
       #   end
       #   when -> (pending) { pending.include? "mood" }
+      resp_message = nil
       case body
       when -> (txt) { txt.match(/[1-5]/) }
         mood = body.match(/[1-5]/)[0]
-        mood_resp = MoodResponse.create!(user_id: user.id, body: mood)
-        Rails.logger.info("Mood Event Created! Level: #{mood_resp.body}")
-      when -> (txt) { txt[0].match(/[YN]/) }
-        gym = body.match(/[YN]/)[0]
-        # went = ( gym == "Y" ) ? true : false
-        gym_resp = GymResponse.create!(user_id: user.id, body: gym)
-        Rails.logger.info("Gym Event Created! Went: #{gym_resp.body}")
+        resp_message = MoodResponse.create!(user_id: user.id, body: mood)
+        Rails.logger.info("Mood Event Created! Level: #{resp_message.body}")
+      when -> (txt) { txt.match(/^Gym/i) }
+        resp_message = GymResponse.create!(user_id: user.id, body: txt)
+        Rails.logger.info("Gym Event Created! Went: #{resp_message.body}")
+      when -> (txt) { txt.match(/^Event/i) }
+        resp_message = EventResponse.create!(user_id: user.id, body: txt)
+        Rails.logger.info("Life Event Created! Event: #{resp_message.body}")
       else
         Rails.logger.info("UNABLE to match message: #{body}")
       end
@@ -67,7 +69,7 @@ class MessagesController < ApplicationController
       # end
 
       twiml = Twilio::TwiML::Response.new do |r|
-        r.message "Thanks! Saved your response. View your data at trigger-app.heroku.com."
+        r.message resp_message.response_body
       end
     #end
     
