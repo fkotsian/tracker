@@ -19,16 +19,16 @@ class MessagesController < ApplicationController
     if !user
       user = User.new
       user_phone = Phone.new(number: user_number)
-      user_subscription = MoodSubscription.new
-      user_subscription_configuration = default_subscription_configuration(user_subscription)
+      # user_subscription = MoodSubscription.new
+      #user_subscription_configuration = default_subscription_configuration(user_subscription)
 
-      user_subscription_configuration.save!
-      user_subscription.save!
+      # user_subscription_configuration.save!
+      # user_subscription.save!
 
       user_phone.save!
       user.phones << user_phone
 
-      user.subscriptions << user_subscription
+      # user.subscriptions << user_subscription
       user.save!
 
       # twiml = Twilio::TwiML::Response.new do |r|
