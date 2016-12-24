@@ -16,6 +16,24 @@ namespace :messages do
     # session["pending_messages"] << "mood"
   end
 
+  desc "Ask whether user went to the gym today"
+  task :ask_if_gym do
+    already_went = GymResponse.where('created_at > ?', Date.today.to_time.utc).count >= 1
+
+    unless already_went
+      msg = "Hey Frank! Have you gone to the gym today? Respond 'Gym' to record."
+      to_number = '+13104835624'
+
+      TwilioHelper.client.messages.create({
+        from: '+16508894472',
+        to: to_number,
+        body: msg
+      })
+
+      Rails.logger.info("RAKE: Asked for gym status from #{to_number}")
+    end
+  end
+
   desc 'Send a message summarizing gym activity for the week'
   task :send_gym_summary do
     return unless Date.today.wday == 6  # only run on Saturday; hack to get around Heroku Scheduler
