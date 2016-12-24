@@ -3,7 +3,7 @@ require './app/helpers/twilio_helper'
 
 namespace :messages do
   desc 'Send a message checking in on mood'
-  task :send_mood do
+  task :send_mood => :environment do
     to_number = '+13104835624'
     TwilioHelper.client.messages.create({
       from: '+16508894472',
@@ -17,7 +17,7 @@ namespace :messages do
   end
 
   desc "Ask whether user went to the gym today"
-  task :ask_if_gym do
+  task :ask_if_gym => :environment do
     already_went = GymResponse.where('created_at > ?', Date.today.to_time.utc).count >= 1
 
     unless already_went
@@ -35,7 +35,7 @@ namespace :messages do
   end
 
   desc 'Send a message summarizing gym activity for the week'
-  task :send_gym_summary do
+  task :send_gym_summary => :environment do
     return unless Date.today.wday == 6  # only run on Saturday; hack to get around Heroku Scheduler
 
     gym_accounts = GymResponse.where('created_at > ?', 1.week.ago).count
