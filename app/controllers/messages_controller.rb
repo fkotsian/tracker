@@ -91,7 +91,7 @@ class MessagesController < ApplicationController
   end
 
   def default_subscription_configuration(subscription)
-    SubscriptionConfiguration.create!(time_to_send: '12:00', subscription: subscription)
+    #SubscriptionConfiguration.create!(time_to_send: '12:00', subscription: subscription)
   end
 
   def message_params
