@@ -56,10 +56,10 @@ class MessagesController < ApplicationController
         resp_message = MoodResponse.create!(user_id: user.id, body: mood)
         Rails.logger.info("Mood Event Created! Level: #{resp_message.body}")
       when -> (txt) { txt.match(/^Gym/i) }
-        resp_message = GymResponse.create!(user_id: user.id, body: txt)
+        resp_message = GymResponse.create!(user_id: user.id, body: body)
         Rails.logger.info("Gym Event Created! Went: #{resp_message.body}")
       when -> (txt) { txt.match(/^Event/i) }
-        resp_message = EventResponse.create!(user_id: user.id, body: txt)
+        resp_message = EventResponse.create!(user_id: user.id, body: body)
         Rails.logger.info("Life Event Created! Event: #{resp_message.body}")
       else
         Rails.logger.info("UNABLE to match message: #{body}")
